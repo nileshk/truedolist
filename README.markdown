@@ -1,15 +1,15 @@
 True Do List
 ============
 
-This is a simple todo list application written using Django and
-jQuery. The back end exposes JSON services.  The UI mostly JavaScript
-calling those services (no use of Django templates at the moment and
-only a small amount of static HTML).
+This is a simple todo list web application written using Django and
+jQuery. The back end exposes JSON services.  The UI is mostly
+JavaScript calling those services (no use of Django templates at the
+moment and only a small amount of static HTML).
 
-It is currently a work in progress.  However, it is fully functional
-at the moment.  I am in the middle of developing the "label" feature.
-And the JSON services could probably be made more RESTful and the API
-for is subject to change.
+It is currently a work in progress.  However, it is functional at the
+moment, though lacking some polish.  I am in the middle of developing
+the "label" feature.  And the JSON services could probably be made
+more RESTful and the API for is subject to change.
 
 Why another todo list?
 ----------------------
@@ -65,6 +65,9 @@ For the web UI to work:
 The project is currently configured to use an sqlite3 database, but
 you should be able to configure whatever database you want (I have not
 used any database specific code, though if I do, it will be for PostgreSQL).
+
+There currently is no login page, so you will need to login through
+the admin application first and then navigate to `/static/index.html`.
 
 Credits
 -------
