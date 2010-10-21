@@ -47,9 +47,12 @@ Prerequisites
 -------------
 
 * Python 2.5 or higher 2.x version
-* [Django 1.1](http://www.djangoproject.com/)
+* [Django 1.1](http://www.djangoproject.com/) or higher
 * [South 0.6](http://south.aeracode.org/) (Optional for DB migrations)
 * [Blueprint CSS Framework](http://www.blueprintcss.org/)
+
+Uses CDN for
+------------
 * [jQuery](http://jquery.com/)
 * [jQuery UI](http://jqueryui.com/)
 
@@ -57,10 +60,8 @@ Setup
 -----
 
 For the web UI to work:
-* Create directories `static/js` and `static/css`
-* Copy the `blueprint` folder into `static/css`
-* Copy `jquery.js` into `static/js`
-* Copy `jquery-ui.js` into `static/js`
+
+* Run `scripts/setup.sh` which will download Blueprint and copy its `blueprint` folder into `static/css`
 
 The project is currently configured to use an sqlite3 database, but
 you should be able to configure whatever database you want (I have not
