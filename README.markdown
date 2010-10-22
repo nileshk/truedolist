@@ -18,9 +18,9 @@ Why did I create yet another todo list?  Most todo list web apps out
 there are either too complicated with a lot of features I don't use or
 way too simple.  Some come close to doing exactly what I want, but
 either have a cluttered interface, require a subscription, or don't
-have a fully functional phone version.  So I decided to create my
-own.  Actually the first iteration of this was written in Java and I
-am still using that version (which I intend to open source as well).
+have a fully functional phone version.  So I decided to create my own.
+Actually the first iteration of this was written in Java and I am
+still using that [version](http://github.com/nileshk/truedolist-java).
 This is a rewrite of that.
 
 Design
@@ -37,10 +37,11 @@ The design is very simple and you can do the following actions:
 * Delete lists or items
 * Create, rename, delete labels
 * Apply labels to lists
+* Highlight an item
 
 I am planning to add these features:
 
-* Highlight an item
+* Use various different colors for highlighting
 * Strikethrough an item (to signify it is done)
     
 Prerequisites
