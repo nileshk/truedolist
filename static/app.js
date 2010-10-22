@@ -1,4 +1,5 @@
-(function(){
+/* -*-mode:js; js-indent-level: 2 -*- */
+//(function(){
 
 var FX_TRANSFER_DELAY = 350;
 var FX_HIGHLIGHT_DELAY = 1000;
@@ -53,6 +54,9 @@ function loadItemsForList(list_id, callback) {
           $("#todoItem" + item.id).click(function() {
                                            selectTodoItem(item.id, item.title);
                                          });
+          if (item.highlight_color !== null) {
+            $("#todoItem" + item.id).addClass('ui-state-highlight');
+          }
         });
       $('</ul>').appendTo("#items");
       if (callback !== undefined && callback !== null) {
@@ -182,12 +186,20 @@ function selectTodoItem( item_id, item_title ) {
     '<a id="todoItemOptionEdit" class="button" href="#">Edit</a> ' +
     '<a id="todoItemOptionDelete" class="button" href="#">Delete</a> ' +
     '<a id="todoItemOptionMove" class="button" href="#">Move</a> ' +
-    '<a id="todoItemOptionCancel" class="button" href="#">Cancel</a>' +
+    '<a id="todoItemOptionCancel" class="button" href="#">Cancel</a> ' +
+    '<a id="todoItemOptionHighlight" class="button" href="#">Highlight</a> ' +
+    '<a id="todoItemOptionUnhighlight" class="button" href="#">Unhighlight</a> ' +
     '</div>');
   $("#todoItemOptionEdit").click(todoItemModeEdit);
   $("#todoItemOptionDelete").click(deleteItem);
   $("#todoItemOptionMove").click(moveItem);
   $("#todoItemOptionCancel").click(todoItemModeNew);
+  $("#todoItemOptionHighlight").click(function() { 
+    highlightItem(current_item_id, 1);
+  });
+  $("#todoItemOptionUnhighlight").click(function() { 
+    highlightItem(current_item_id, null);
+  });
 }
 
 function todoItemModeEdit() {
@@ -435,6 +447,24 @@ function repositionItem( item_id ) {
   return false; // Cancel form POST
 }
 
+function highlightItem( item_id, highlight_color ) {
+  if (item_id !== null) {
+    var parameters = { p:'p' } // TODO Need at least one param or get 404
+    if (highlight_color !== null) {
+      parameters.highlight_color = highlight_color
+    }
+    $.post("/api/items/highlight/" + item_id + "/", parameters,
+           function ( result, textStatus ) {
+             loadItemsForList(current_list_id,
+                              function() {
+                                bounce(getTodoItem(item_id));
+                              });
+             return false;
+           }, "json");
+  }
+  return false; // Cancel form POST
+}
+    
 function newLabelDialog() {
   var newTitle = prompt("Enter title of new label", "");
   if (newTitle !== null) {
@@ -523,4 +553,4 @@ $(document).ready(
     todoItemModeNew();
   });
 
-})();
+//})();

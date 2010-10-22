@@ -164,6 +164,7 @@ class TodoItem(models.Model):
     todo_list = models.ForeignKey(TodoList)
     position = models.IntegerField()
     user = models.ForeignKey(User)
+    highlight_color = models.IntegerField(null=True)
 #    todo_context = models.ForeignKey(TodoContext, null=True)
 #   TODO: Highlighting    
     def __unicode__(self):

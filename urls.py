@@ -31,6 +31,10 @@ urlpatterns = patterns(
     (r'^api/items/move/(?P<todo_item_id>\d+)/$', 
      'todolists.views.move_todo_item'),
 
+    # Highlight functions
+    (r'^api/items/highlight/(?P<todo_item_id>\d+)/$', 
+     'todolists.views.highlight_todo_item'),
+    
     # Example:
     # (r'^truedolist/', include('truedolist.foo.urls')),
 

@@ -28,6 +28,14 @@ def id_list(items):
                  'position': item.position }
     return to_json(items, map_function)
 
+def items_as_json(items):
+    def map_function(item):
+        return { 'id': item.pk,
+                 'title': item.title,
+                 'position': item.position,
+                 'highlight_color': item.highlight_color }
+    return to_json(items, map_function)
+
 def success_json():
     return as_json({'success': True})
 
@@ -142,7 +150,7 @@ def todo_items(request, todo_list_id):
 
     items = TodoItem.objects.filter(user=request.user, 
                                     todo_list=todo_list_id).order_by('position')
-    return id_list(items)
+    return items_as_json(items)
 
 @logged_in_or_basicauth()
 def todo_item(request, todo_item_id):
@@ -267,6 +275,23 @@ def move_todo_item(request, todo_item_id):
         todo_item.save()
         return success_json()
     raise Http404 # XXX
+
+@logged_in_or_basicauth()
+def highlight_todo_item(request, todo_item_id):
+    logging.debug("highlight_todo_item")
+    if request.method != "POST" or not request.POST:
+        raise Http404 # TODO This is probably the wrong error code
+    item = get_object_or_404(TodoItem, pk = todo_item_id, user = request.user)
+    highlight_color = request.POST.get('highlight_color', False)
+    if highlight_color:
+        logging.debug('Setting highlight_color for todo_item_id: ' + todo_item_id +
+                     ' to ' + highlight_color)
+        item.highlight_color = int(highlight_color)
+    else:
+        logging.debug('Unhighlighting todo_item_id: ' + todo_item_id)
+        item.highlight_color = None
+    item.save()
+    return success_json()
 
 # Create a label POST /api/labels/
 # List labels GET /api/labels/
