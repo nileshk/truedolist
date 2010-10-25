@@ -132,6 +132,10 @@ function focusInput() {
   $("#itemEditInput").focus();
 }
 
+function selectLabelsTab() {
+  $("#sidebarTabs").tabs("select", 1);
+}
+
 function selectNoList() {
   $("#items").empty();
 }
@@ -437,6 +441,7 @@ function labelList() {
                          + 'on label to apply to this todo list',
                          "notice");
     $("#todoListOptionLabel").text("Cancel Label");
+    selectLabelsTab();
   } else {
     clearStatusMessage();
     $("#todoListOptionLabel").text("Label");
@@ -480,6 +485,7 @@ function renameLabel(label_id) {
            // TODO check for error condition
            loadLabels(function() {
              bounce(getTodoLabel(label_id));
+             todoItemModeNew();
            });
            $("#itemEditInput").val("");
            return false;
