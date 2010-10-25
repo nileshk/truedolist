@@ -104,6 +104,14 @@ function getTodoList(todo_list_id) {
   return $("#" + getTodoListId(todo_list_id));
 }
 
+function getTodoLabelId(todo_label_id) {
+  return "todoLabel" + todo_label_id;
+}
+
+function getTodoLabel(todo_label_id) {
+  return $("#" + getTodoLabelId(todo_label_id));
+}
+
 function getNumberFromTodoListId(todo_list_id) {
   return todo_list_id.substring(8);
 }
@@ -512,7 +520,7 @@ function selectTodoLabel(label_id, callback) {
   var label_node = $("#todoLabel" + label_id + "Lists");
   var todo_label = $("#todoLabel" + label_id + "Lists > ul");
   if (is_labelling_list) {
-    
+    addLabelToSelectedList(label_id);
     return;
   }
   
@@ -545,6 +553,22 @@ function selectTodoLabel(label_id, callback) {
     });
 
 }
+
+function addLabelToSelectedList(label_id) {
+  if(is_labelling_list && current_list_id !== null) {
+    var parameters = { p: 'p' }; // Have to post something
+    // /api/lists/:list_id/labels/:label_id/
+    $.post("/api/lists/" + current_list_id + "/labels/" +
+           label_id + "/", parameters, 
+           function(results, textStatus) {
+             loadLabels(function() {
+               bounce(getTodoLabel(label_id));
+               labelList(); // Cancel labelling
+             });
+           });
+  }
+}
+
 
 function displayStatusMessage(message, status) {
   $("#statusMessageArea").empty();
