@@ -13,6 +13,7 @@ var is_moving_item = false;
 var is_moving_list = false;
 var is_item_edit_mode = false;
 var is_list_edit_mode = false;
+var is_label_edit_mode = false;
 var is_labelling_list = false;
 var is_unlabelling_list = false;
 var lists = null;
@@ -77,6 +78,7 @@ function loadLabels(callback) {
         $('<li id="todoLabelLi' + item.id +'">' + 
           '<div id="todoLabel' + item.id +
           '" class="todoLabel" />' +
+          '<a id="todoLabelEdit' + item.id + '" href="#">(Edit)</a>' +
           '<a id="todoLabelDelete' + item.id + '" href="#">(Delete)</a>' +
           '<div id="todoLabel' + item.id +
           'Lists" /></li>').appendTo("#labels");
@@ -85,6 +87,9 @@ function loadLabels(callback) {
           function() {
             selectTodoLabel(item.id);
           });
+        $("#todoLabelEdit" + item.id).click(function() {
+          editLabel(item.id, item.title);
+        });
         $("#todoLabelDelete" + item.id).click(function() {
           deleteLabel(item.id);          
         });
@@ -239,6 +244,7 @@ function todoItemModeEdit() {
 function todoItemModeNew() {
   is_item_edit_mode = false;
   is_list_edit_mode = false;
+  is_label_edit_mode = false;
   $("#itemEditInput").val("");
   $("#itemEditButtons").empty();
   $('<input value="+ New item" ' +
@@ -447,6 +453,36 @@ function unlabelList() {
   }
 }
 
+function editLabel(label_id, title) {
+  is_label_edit_mode = true;
+  $("#itemEditInput").val(title);
+  $("#itemEditButtons").empty();
+  $('<input value="Save label" ' +
+    'class="button" type="submit" id="saveTodoLabel" />' +
+    '<input value="Cancel" class="button" type="submit" ' +
+    'id="cancelEditTodoLabel" />').appendTo("#itemEditButtons");
+  $("#saveTodoLabel").click(function() {
+    renameLabel(label_id);
+  });
+  $("#cancelEditTodoLabel").click(todoItemModeNew);
+  focusInput();
+}
+
+function renameLabel(label_id) {
+  var title = $("#itemEditInput").val();
+  var parameters = { title: title, request_method: "PUT" };
+  $.post("/api/labels/" + label_id + "/", parameters,
+         function ( result, textStatus ) {
+           // TODO check for error condition
+           loadLabels(function() {
+             bounce(getTodoLabel(label_id));
+           });
+           $("#itemEditInput").val("");
+           return false;
+         }, "json");
+  return false; // Cancel form POST
+}
+
 function moveItemToList( list_id ) {
   if (is_moving_item && current_item_id !== null) {
     var parameters = { destination_list_id: list_id };
@@ -647,8 +683,12 @@ $(document).ready(
     $("#sidebarTabs").tabs();
     loadLists();
     loadLabels();
-    $("#newListButton").click(newListDialog);
-    $("#newLabelButton").click(newLabelDialog);
+    $("#newListButton")
+      .click(newListDialog)
+      .button();
+    $("#newLabelButton")
+      .click(newLabelDialog)
+      .button();
     todoItemModeNew();
   });
 
