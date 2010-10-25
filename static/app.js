@@ -318,6 +318,7 @@ function renameList() {
              function() {
                highlight(getTodoList(rename_list_id));
                highlight($("#listTitle"));
+               todoItemModeNew();
              });
            current_list_title = title;
            $("#itemEditInput").val("");
