@@ -688,6 +688,43 @@ function bounce(jqueryObject) {
   jqueryObject.effect("bounce", { times:2 }, 300);
 }
 
+/// BEGIN Keyboard event handling
+
+function keydownHandler(event) {
+  var keyCode = event.keyCode;
+
+  // down / CTRL-N handler
+  if ((keyCode == '78' && event.ctrlKey && !event.altKey)
+      || (keyCode == '40' && !event.ctrlKey && !event.altKey)) {
+    //alert('down' + keyCode);
+    event.preventDefault();
+
+    var current_item = getTodoItem(current_item_id)[0];
+    var is_current_item_in_list = false;
+    var finished = false;
+    $('#items li div').each(function(index, item) {
+      if (!finished && item.id !== 'todoItemOptions') {
+        if (is_current_item_in_list) {
+          $('#' + item.id).triggerHandler("click");
+          finished = true;
+        }
+        if (item.id == current_item.id) {
+          is_current_item_in_list = true;
+        }
+      }
+    });
+  }
+
+  if ((keyCode == '80' && event.ctrlKey && !event.altKey)
+      || (keyCode == '38' && !event.ctrlKey && !event.altKey)) {
+    //alert('up' + keyCode);
+    event.preventDefault();    
+  }
+  
+}
+
+/// END Keyboard event handling
+
 $(document).ready(
   function() {
     $("#sidebarTabs").tabs();
@@ -700,6 +737,8 @@ $(document).ready(
       .click(newLabelDialog)
       .button();
     todoItemModeNew();
+
+    $(document).keydown(keydownHandler);
   });
 
 //})();
