@@ -265,17 +265,19 @@ function todoItemOptionsCancel() {
 }
 
 function addItem() {
-  var title = $("#itemEditInput").val();
-  var parameters = { title: title, request_method: "PUT" };
-  $.post("/api/lists/" + current_list_id + "/items/", parameters,
-         function ( result, textStatus ) {
-           loadItemsForList(current_list_id,
-             function() {
-               highlight($("#items > *:last"));
-             });
-           $("#itemEditInput").val("");
-           return false;
-         }, "json");
+  if (current_list_id !== null) {
+    var title = $("#itemEditInput").val();
+    var parameters = { title: title, request_method: "PUT" };
+    $.post("/api/lists/" + current_list_id + "/items/", parameters,
+           function ( result, textStatus ) {
+             loadItemsForList(current_list_id,
+                              function() {
+                                highlight($("#items > *:last"));
+                              });
+             $("#itemEditInput").val("");
+             return false;
+           }, "json");
+  }
   return false; // Cancel form POST
 }
 
@@ -464,6 +466,7 @@ function editLabel(label_id, title) {
     'id="cancelEditTodoLabel" />').appendTo("#itemEditButtons");
   $("#saveTodoLabel").click(function() {
     renameLabel(label_id);
+    return false;
   });
   $("#cancelEditTodoLabel").click(todoItemModeNew);
   focusInput();
