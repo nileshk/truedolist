@@ -13,6 +13,7 @@ var is_moving_item = false;
 var is_moving_list = false;
 var is_item_edit_mode = false;
 var is_list_edit_mode = false;
+var is_labelling_list = false;
 var lists = null;
 var labels = null;
 
@@ -139,11 +140,13 @@ function showTodoListOptions() {
     '<a id="todoListOptionEdit" href="#">Edit</a> ' +
     '<a id="todoListOptionDelete" href="#">Delete</a> ' +
     '<a id="todoListOptionMove" href="#">Move</a> ' +
+    '<a id="todoListOptionLabel" href="#">Label</a> ' +
     '<a id="todoListOptionCancel" href="#">Cancel</a>'
   );
   $("#todoListOptionEdit").click(todoListModeEdit);
   $("#todoListOptionDelete").click(deleteList);
   $("#todoListOptionMove").click(moveList);
+  $("#todoListOptionLabel").click(labelList);
   $("#todoListOptionCancel").click(todoItemModeNew);
 }
 
@@ -163,8 +166,8 @@ function todoListModeEdit() {
 
 function todoListOptionsCancel() {
   is_moving_list = false;
+  is_labelling_list = false;
   $("#listOptions").empty();
-
 }
 
 function selectTodoItem( item_id, item_title ) {
@@ -382,6 +385,19 @@ function moveList() {
   }
 }
 
+function labelList() {
+  is_labelling_list = !is_labelling_list;
+  if (is_labelling_list) {
+    displayStatusMessage('<span class="loud">Labelling Todo List:</span> Click '
+                         + 'on label to apply to this todo list',
+                         "notice");
+    $("#todoListOptionLabel").text("Cancel Label");
+  } else {
+    clearStatusMessage();
+    $("#todoListOptionLabel").text("Label");
+  }
+}
+
 function moveItemToList( list_id ) {
   if (is_moving_item && current_item_id !== null) {
     var parameters = { destination_list_id: list_id };
@@ -495,6 +511,11 @@ function addLabel(title) {
 function selectTodoLabel(label_id, callback) {
   var label_node = $("#todoLabel" + label_id + "Lists");
   var todo_label = $("#todoLabel" + label_id + "Lists > ul");
+  if (is_labelling_list) {
+    
+    return;
+  }
+  
   if (todo_label !== null && todo_label.length > 0) {
     // Collapse label lists
     todo_label.remove();
