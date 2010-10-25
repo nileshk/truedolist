@@ -14,6 +14,7 @@ var is_moving_list = false;
 var is_item_edit_mode = false;
 var is_list_edit_mode = false;
 var is_labelling_list = false;
+var is_unlabelling_list = false;
 var lists = null;
 var labels = null;
 
@@ -149,12 +150,14 @@ function showTodoListOptions() {
     '<a id="todoListOptionDelete" href="#">Delete</a> ' +
     '<a id="todoListOptionMove" href="#">Move</a> ' +
     '<a id="todoListOptionLabel" href="#">Label</a> ' +
+    '<a id="todoListOptionUnlabel" href="#">Unlabel</a> ' +
     '<a id="todoListOptionCancel" href="#">Cancel</a>'
   );
   $("#todoListOptionEdit").click(todoListModeEdit);
   $("#todoListOptionDelete").click(deleteList);
   $("#todoListOptionMove").click(moveList);
   $("#todoListOptionLabel").click(labelList);
+  $("#todoListOptionUnlabel").click(unlabelList);
   $("#todoListOptionCancel").click(todoItemModeNew);
 }
 
@@ -175,6 +178,7 @@ function todoListModeEdit() {
 function todoListOptionsCancel() {
   is_moving_list = false;
   is_labelling_list = false;
+  is_unlabelling_list = false;
   $("#listOptions").empty();
 }
 
@@ -406,6 +410,19 @@ function labelList() {
   }
 }
 
+function unlabelList() {
+  is_unlabelling_list = !is_unlabelling_list;
+  if (is_unlabelling_list) {
+    displayStatusMessage('<span class="loud">Unlabelling Todo List:</span> Click '
+                         + 'on label to remove for this todo list',
+                         "notice");
+    $("#todoListOptionUnlabel").text("Cancel Unlabel");
+  } else {
+    clearStatusMessage();
+    $("#todoListOptionUnlabel").text("Unlabel");
+  }
+}
+
 function moveItemToList( list_id ) {
   if (is_moving_item && current_item_id !== null) {
     var parameters = { destination_list_id: list_id };
@@ -519,11 +536,16 @@ function addLabel(title) {
 function selectTodoLabel(label_id, callback) {
   var label_node = $("#todoLabel" + label_id + "Lists");
   var todo_label = $("#todoLabel" + label_id + "Lists > ul");
+
   if (is_labelling_list) {
-    addLabelToSelectedList(label_id);
+    modifyLabelForSelectedList(label_id, false);
     return;
   }
-  
+  if (is_unlabelling_list) {
+    modifyLabelForSelectedList(label_id, true);
+    return;
+  }
+
   if (todo_label !== null && todo_label.length > 0) {
     // Collapse label lists
     todo_label.remove();
@@ -554,16 +576,24 @@ function selectTodoLabel(label_id, callback) {
 
 }
 
-function addLabelToSelectedList(label_id) {
-  if(is_labelling_list && current_list_id !== null) {
+function modifyLabelForSelectedList(label_id, is_delete) {
+  if((is_labelling_list || is_unlabelling_list)
+     && current_list_id !== null) {
     var parameters = { p: 'p' }; // Have to post something
+    if (is_delete) {
+      parameters['request_method'] = 'DELETE';
+    }
     // /api/lists/:list_id/labels/:label_id/
     $.post("/api/lists/" + current_list_id + "/labels/" +
            label_id + "/", parameters, 
            function(results, textStatus) {
              loadLabels(function() {
                bounce(getTodoLabel(label_id));
-               labelList(); // Cancel labelling
+               if(is_delete) {
+                 unlabelList(); // Cancel unlabelling
+               } else {
+                 labelList(); // Cancel labelling
+               }
              });
            });
   }
