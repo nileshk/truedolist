@@ -74,14 +74,20 @@ function loadLabels(callback) {
       labels = new Array();
       $.each(results, function(i, item) {
         labels[item.id] = { title: item.title };
-        $('<li><div id="todoLabel' + item.id +
-          '" class="todoLabel" /><div id="todoLabel' + item.id +
+        $('<li id="todoLabelLi' + item.id +'">' + 
+          '<div id="todoLabel' + item.id +
+          '" class="todoLabel" />' +
+          '<a id="todoLabelDelete' + item.id + '" href="#">(Delete)</a>' +
+          '<div id="todoLabel' + item.id +
           'Lists" /></li>').appendTo("#labels");
         $("#todoLabel" + item.id).text(item.title);
         $("#todoLabel" + item.id).click(
           function() {
             selectTodoLabel(item.id);
           });
+        $("#todoLabelDelete" + item.id).click(function() {
+          deleteLabel(item.id);          
+        });
       });
       if (callback !== undefined && callback !== null) {
         callback();
@@ -360,6 +366,24 @@ function deleteItem() {
                { direction: "right" }, FX_SLIDE_DELAY,
                function() {
                  loadItemsForList(current_list_id);
+                 todoItemModeNew();
+               });
+             return false;
+           }, "json");
+  }
+  return false; // Cancel form POST
+}
+
+function deleteLabel(label_id) {
+  if (confirm("Delete label?")) {
+    var parameters = { request_method: "DELETE" };
+    $.post("/api/labels/" + label_id + "/", parameters,
+           function ( result, textStatus ) {
+             // TODO handle failures
+             $("#todoLabelLi" + label_id).hide(
+               "slide", { direction: "right" }, FX_SLIDE_DELAY,
+               function() {
+                 loadLabels();
                  todoItemModeNew();
                });
              return false;
