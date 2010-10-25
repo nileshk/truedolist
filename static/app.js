@@ -693,6 +693,8 @@ function bounce(jqueryObject) {
 function keydownHandler(event) {
   var keyCode = event.keyCode;
 
+  // TODO Traversing list is very hackish and needs to be improved
+  
   // down / CTRL-N handler
   if ((keyCode == '78' && event.ctrlKey && !event.altKey)
       || (keyCode == '40' && !event.ctrlKey && !event.altKey)) {
@@ -701,12 +703,11 @@ function keydownHandler(event) {
 
     var current_item = getTodoItem(current_item_id)[0];
     var is_current_item_in_list = false;
-    var finished = false;
     $('#items li div').each(function(index, item) {
       if (!finished && item.id !== 'todoItemOptions') {
         if (is_current_item_in_list) {
           $('#' + item.id).triggerHandler("click");
-          finished = true;
+          return false;
         }
         if (item.id == current_item.id) {
           is_current_item_in_list = true;
@@ -715,10 +716,24 @@ function keydownHandler(event) {
     });
   }
 
+  // up / CTRL-P handler
   if ((keyCode == '80' && event.ctrlKey && !event.altKey)
       || (keyCode == '38' && !event.ctrlKey && !event.altKey)) {
     //alert('up' + keyCode);
     event.preventDefault();    
+
+    var current_item = getTodoItem(current_item_id)[0];
+    var finished = false;
+    var previous_item_id = null;
+    $('#items li div').each(function(index, item) {
+      if (!finished && item.id !== 'todoItemOptions') {
+        if (item.id == current_item.id) {
+          $('#' + previous_item_id).triggerHandler('click');
+          return false;
+        }
+        previous_item_id = item.id;
+      }
+    });
   }
   
 }
