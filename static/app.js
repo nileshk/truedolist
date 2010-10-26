@@ -83,11 +83,13 @@ function loadLabels(callback) {
           'href="#todoLabelOptions' + item.id + '" ' +
           'class="todolabel fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all">' +
           '<span class="ui-icon ui-icon-triangle-1-s"></span>' +
-          '</a>' +          
-          '<ul id="todoLabelOptions' + item.id + '">' +
-          '<li><a id="todoLabelEdit' + item.id + '" href="#">(Edit)</a></li>' +
-          '<li><a id="todoLabelDelete' + item.id + '" href="#">(Delete)</a></li>' +
+          '</a>' +
+          '<div id="todoLabelOptions' + item.id + '" class="hidden">' +
+          '<ul>' +
+          '<li><a id="todoLabelEdit' + item.id + '" href="#">Edit</a></li>' +
+          '<li><a id="todoLabelDelete' + item.id + '" href="#">Delete</a></li>' +
           '</ul>' +
+          '</div>' +
           '<div id="todoLabel' + item.id +
           'Lists" /></li>').appendTo("#labels");
         $("#todoLabel" + item.id).click(function() {
