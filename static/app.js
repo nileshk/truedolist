@@ -75,18 +75,26 @@ function loadLabels(callback) {
       labels = new Array();
       $.each(results, function(i, item) {
         labels[item.id] = { title: item.title };
-        $('<li id="todoLabelLi' + item.id +'">' + 
-          '<div id="todoLabel' + item.id +
-          '" class="todoLabel" />' +
-          '<a id="todoLabelEdit' + item.id + '" href="#">(Edit)</a>' +
-          '<a id="todoLabelDelete' + item.id + '" href="#">(Delete)</a>' +
+        $('<li id="todoLabelLi' + item.id +'">' +
+          '<span id="todoLabel' + item.id + '">' +
+          item.title +
+          '</span>' +
+          '<a id="todoLabelOptionsButton' + item.id + '" ' +
+          'href="#todoLabelOptions' + item.id + '" ' +
+          'class="todolabel fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all">' +
+          '<span class="ui-icon ui-icon-triangle-1-s"></span>' +
+          '</a>' +          
+          '<ul id="todoLabelOptions' + item.id + '">' +
+          '<li><a id="todoLabelEdit' + item.id + '" href="#">(Edit)</a></li>' +
+          '<li><a id="todoLabelDelete' + item.id + '" href="#">(Delete)</a></li>' +
+          '</ul>' +
           '<div id="todoLabel' + item.id +
           'Lists" /></li>').appendTo("#labels");
-        $("#todoLabel" + item.id).text(item.title);
-        $("#todoLabel" + item.id).click(
-          function() {
-            selectTodoLabel(item.id);
-          });
+        $("#todoLabel" + item.id).click(function() {
+          selectTodoLabel(item.id);
+        })
+        $("#todoLabelOptionsButton" + item.id)
+          .menu({ content: $('#todoLabelOptions' + item.id).html() });
         $("#todoLabelEdit" + item.id).click(function() {
           editLabel(item.id, item.title);
         });
