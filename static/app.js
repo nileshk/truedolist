@@ -81,7 +81,7 @@ function loadLabels(callback) {
           '</span>' +
           '<a id="todoLabelOptionsButton' + item.id + '" ' +
           'href="#todoLabelOptions' + item.id + '" ' +
-          'class="todolabel fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all">' +
+          'class="todolabel fg-button fg-button-icon-center ui-widget ui-state-default ui-corner-all">' +
           '<span class="ui-icon ui-icon-triangle-1-s"></span>' +
           '</a>' +
           '<div id="todoLabel' + item.id + // TODO Name this more consistent?
@@ -601,8 +601,6 @@ function showTodoLabelOptions(item_id, item_title) {
         $("#todoLabelOptionCancel" + item_id).click(function() {
           $("#todoLabelOptions").remove();
         });
-    
-      
   }
 }
 
