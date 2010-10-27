@@ -142,7 +142,7 @@ function focusInput() {
 }
 
 function selectLabelsTab() {
-  $("#sidebarTabs").tabs("select", 1);
+  $("#by-label").accordion("activate", 0);
 }
 
 function selectNoList() {
@@ -773,6 +773,16 @@ function keydownHandler(event) {
 $(document).ready(
   function() {
     $("#sidebarTabs").tabs();
+    var accordianSettings = {
+      collapsible: true, 
+      fillSpace: true, 
+      clearStyle: true,
+      active: false
+    }
+      
+    $("#by-label").accordion(accordianSettings);
+    $("#by-list").accordion(accordianSettings);
+    
     loadLists();
     loadLabels();
     $("#newListButton")
