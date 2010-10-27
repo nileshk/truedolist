@@ -84,24 +84,13 @@ function loadLabels(callback) {
           'class="todolabel fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all">' +
           '<span class="ui-icon ui-icon-triangle-1-s"></span>' +
           '</a>' +
-          '<div id="todoLabelOptions' + item.id + '" class="hidden">' +
-          '<ul>' +
-          '<li><a id="todoLabelEdit' + item.id + '" href="#">Edit</a></li>' +
-          '<li><a id="todoLabelDelete' + item.id + '" href="#">Delete</a></li>' +
-          '</ul>' +
-          '</div>' +
-          '<div id="todoLabel' + item.id +
+          '<div id="todoLabel' + item.id + // TODO Name this more consistent?
           'Lists" /></li>').appendTo("#labels");
         $("#todoLabel" + item.id).click(function() {
           selectTodoLabel(item.id);
         })
-        $("#todoLabelOptionsButton" + item.id)
-          .menu({ content: $('#todoLabelOptions' + item.id).html() });
-        $("#todoLabelEdit" + item.id).click(function() {
-          editLabel(item.id, item.title);
-        });
-        $("#todoLabelDelete" + item.id).click(function() {
-          deleteLabel(item.id);          
+        $("#todoLabelOptionsButton" + item.id).click(function() {
+          showTodoLabelOptions(item.id, item.title);
         });
       });
       if (callback !== undefined && callback !== null) {
@@ -591,6 +580,29 @@ function newLabelDialog() {
   if (newTitle !== null) {
     addLabel(newTitle);
     // TODO Switch to label after creation
+  }
+}
+
+function showTodoLabelOptions(item_id, item_title) {
+  if (item_id !== null) {
+    $("#todoLabelOptions").remove();
+    $("#todoLabelOptionsButton" + item_id)
+      .after('<div id="todoLabelOptions">' +
+             '<a id="todoLabelOptionEdit' + item_id + '" href="#">Edit</a> ' +
+             '<a id="todoLabelOptionDelete' + item_id + '" href="#">Delete</a> ' +
+             '<a id="todoLabelOptionCancel' + item_id + '" href="#">Cancel</a> ' +
+             '</div>');
+        $("#todoLabelOptionEdit" + item_id).click(function() {
+          editLabel(item_id, item_title);
+        });
+        $("#todoLabelOptionDelete" + item_id).click(function() {
+          deleteLabel(item_id);          
+        });
+        $("#todoLabelOptionCancel" + item_id).click(function() {
+          $("#todoLabelOptions").remove();
+        });
+    
+      
   }
 }
 
