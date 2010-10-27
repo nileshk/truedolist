@@ -92,6 +92,16 @@ function loadLabels(callback) {
         $("#todoLabelOptionsButton" + item.id).click(function() {
           showTodoLabelOptions(item.id, item.title);
         });
+
+        // TODO Disable this for mobile devices
+        $("#todoLabelOptionsButton" + item.id).hide();
+        $("#todoLabelLi" + item.id).hover(
+          function() {
+            $("#todoLabelOptionsButton" + item.id).show();
+          },
+          function() {
+            $("#todoLabelOptionsButton" + item.id).hide();
+          });
       });
       if (callback !== undefined && callback !== null) {
         callback();
