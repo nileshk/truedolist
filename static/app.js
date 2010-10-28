@@ -76,7 +76,7 @@ function loadLabels(callback) {
       labels = new Array();
       $.each(results, function(i, item) {
         labels[item.id] = { title: item.title };
-        $('<li id="todoLabelLi' + item.id +'">' +
+        $('<li id="todoLabelLi' + item.id +'" class="td-label">' +
           '<span id="todoLabel' + item.id + '">' +
           item.title +
           '</span>' +
