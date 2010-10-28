@@ -26,7 +26,7 @@ function loadLists(callback) {
       lists = new Array();
       $.each(results, function(i, item) {
         lists[item.id] = { title: item.title };
-        $('<li><div id="todoList' + item.id +
+        $('<li class="td-list"><div id="todoList' + item.id +
           '" class="todoList" /></li>').appendTo("#lists");
         $("#todoList" + item.id).text(item.title);
         $("#todoList" + item.id).click(
@@ -51,12 +51,13 @@ function loadItemsForList(list_id, callback) {
       $("#listTitle").click(showTodoListOptions);
       $.each(results,
         function(i, item) {
-          $('<li><div id="' + getTodoItemId(item.id) +
+          $('<li class="td-item"><div id="' + getTodoItemId(item.id) +
             '">' + item.title + '</div></li>').appendTo("#items");
-          $("#todoItem" + item.id).text(item.title);
-          $("#todoItem" + item.id).click(function() {
-                                           selectTodoItem(item.id, item.title);
-                                         });
+          $("#todoItem" + item.id)
+            .text(item.title)
+            .click(function() {
+              selectTodoItem(item.id, item.title);
+            });
           if (item.highlight_color !== null) {
             $("#todoItem" + item.id).addClass('ui-state-highlight');
           }
@@ -661,8 +662,9 @@ function selectTodoLabel(label_id, callback) {
       $.each(results, function(i, item) {
 //        labels[item.id] = { title: item.title };
         var div_id = 'label' + label_id + 'todoList' + item.id;
-        $("#todoLabel" + label_id + 'Lists > ul').append('<li><div id="' +
-          div_id + '" class="todoList" /></li>');
+        $("#todoLabel" + label_id + 'Lists > ul')
+          .append('<li class="td-list"><div id="' +
+                  div_id + '" class="todoList" /></li>');
         $("#" + div_id).text(item.title);
         $("#" + div_id).click(
           function() {
