@@ -6,7 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    (r'^admin/(.*)', admin.site.root),
+    url(r'^admin/', include(admin.site.urls)),
     (r'^api/login/$', 'todolists.views.login'),    
     (r'^api/lists/$', 'todolists.views.todo_lists'),
     (r'^api/lists/(?P<todo_list_id>\d+)/$', 'todolists.views.todo_list'),

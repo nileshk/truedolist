@@ -173,4 +173,4 @@ class TodoItem(models.Model):
 class TodoListForm(forms.ModelForm):
     class Meta:
         model = TodoList
-        fields = ('title')
+        fields = ('title',)
