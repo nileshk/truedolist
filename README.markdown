@@ -47,9 +47,9 @@ I am planning to add these features:
 Prerequisites
 -------------
 
-* Python 2.5 or higher 2.x version
-* [Django 1.1](http://www.djangoproject.com/) or higher
-* [South 0.6](http://south.aeracode.org/) (Optional for DB migrations)
+* Python 2.7 or higher 2.x version
+* [Django 1.6](http://www.djangoproject.com/) or higher
+* [South 0.8.1](http://south.aeracode.org/) (Optional for DB migrations)
 * [Blueprint CSS Framework](http://www.blueprintcss.org/)
 
 Uses CDN for
