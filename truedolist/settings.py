@@ -1,5 +1,6 @@
 # Django settings for truedolist project.
 import os, logging
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 logging.basicConfig(
     level = logging.DEBUG,
@@ -91,6 +92,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
+#    'django.contrib.staticfiles',
     'truedolist.todolists',
     'south',
 )
