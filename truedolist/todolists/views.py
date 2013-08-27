@@ -2,7 +2,7 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from django.shortcuts import get_object_or_404, get_list_or_404, render_to_response
+from django.shortcuts import get_object_or_404, get_list_or_404, render_to_response, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.utils import simplejson
 from django.template import RequestContext
@@ -46,6 +46,15 @@ def labels_to_json(items):
         return { 'id': item.pk,
                  'title': item.title }
     return to_json(items, map_function)
+
+@login_required
+def home(request):
+  return redirect('/static/index.html')
+
+def login_page(request):
+    return render_to_response(
+        'todolists/login_page.html',
+        context_instance = RequestContext(request))
 
 @require_POST
 def login(request):

@@ -7,6 +7,8 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', 'truedolist.todolists.views.home'),
+    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^api/login/$', 'truedolist.todolists.views.login'),    
     (r'^api/lists/$', 'truedolist.todolists.views.todo_lists'),
     (r'^api/lists/(?P<todo_list_id>\d+)/$', 'truedolist.todolists.views.todo_list'),
