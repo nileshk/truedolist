@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html ng-app="trueDoList">
+  <head>
+    <title>TrueDoList</title>
+
+    <link rel="stylesheet" 
+          href="/static/css/blueprint/screen.css" 
+          type="text/css" media="screen, projection"/>
+
+    <link rel="stylesheet" 
+          href="/static/css/blueprint/print.css" type="text/css" media="print"/>
+
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" 
+          href="/static/css/blueprint/ie.css" 
+          type="text/css" media="screen, projection"/>
+    <![endif]-->
+    
+    <link rel="stylesheet" 
+          href="/static/css/blueprint/plugins/fancy-type/screen.css"
+          type="text/css" media="screen, projection"/>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/base/jquery-ui.css"
+          type="text/css"
+          rel="stylesheet"/>
+    
+    <link rel="stylesheet" 
+          href="/static/css/screen.css"
+          type="text/css" media="screen, projection"/>
+<!--
+    <link type="text/css" 
+          href="http://jqueryui.com/latest/themes/base/ui.all.css" 
+          rel="stylesheet" />
+-->
+
+<!--    <link rel="stylesheet" 
+          href="/static/css/blueprint/plugins/buttons/screen.css"
+          type="text/css" media="screen, projection"/>-->
+
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"
+            type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js" 
+            type="text/javascript"></script>
+ -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.js"
+            type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-resource.js"
+            type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.js"
+            type="text/javascript"></script>
+  </head>
+
+<body>
+<div id="container" class="container" ng-controller="TodoListController">
+  <div class="span-19">
+    <h1><span class="alt">True Do List</span></h1>
+  </div>
+  <div class="span-5 last">
+    <a href="#">Profile</a> |
+    <a href="#">Preferences</a> | 
+    <a href="#">Logout</a>
+  </div>
+  <div class="span-24 last">
+    <hr/>
+  </div>
+  <form method="post" id="inputForm" action="#">
+    <div class="span-8">
+      <input id="itemEditInput" class="title"/>
+    </div>
+    <div class="span-4">
+      <br/>
+      <div id="itemEditButtons">
+      </div>
+    </div>
+    <div class="span-12 last">
+      <div id="statusMessageArea"></div>
+    </div>
+  </form>
+  <div class="span-24 last">
+    <hr/>
+  </div>
+  
+  <div class="span-5 colborder">
+    <div id="by-label">
+      <h3><a href="#">Labels</a></h3>
+      <div class="td-panel">
+        <a id="newLabelButton" class="new-button" href="#">+ New Label</a>
+        <br/>
+        <ul id="labels" class="td-panel-list">
+          <li ng-repeat="label in labels" class="td-label">
+            {{label.title}}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="by-list">
+      <h3><a href="#">Lists</a></h3>
+      <div class="td-panel">
+        <a id="newListButton" class="new-button" href="#">+ New List</a>
+        <br/>
+        <ul id="lists" class="td-panel-list">
+          <li ng-repeat="list in lists" class="td-list">
+            <a href="#/lists/{{list.id}}">{{list.title}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="items" class="span-18 last">
+    <div ng-view></div>
+  </div>
+</div>
+<script src="/static/ang.js" type="text/javascript"></script>
+</body>
+</html>
