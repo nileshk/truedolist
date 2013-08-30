@@ -1,3 +1,13 @@
 <ul>
-  <li ng-repeat="item in items">{{item.title}}</li>
+  <li class="td-item" ng-repeat="item in items">
+    <span ng-click="showOptions = ! showOptions">{{item.title}}</span>
+    <div ng-show="showOptions">
+      <span ng-click="editMode = ! editMode">Edit</span>
+      <span ng-click="delete = ! delete">Delete</span>
+      <span ng-click="move = ! move">Move</span>
+      <span ng-click="label = ! label">Label</span>
+      <span ng-click="unlabel = ! unlabel">Unlabel</span>
+      <span ng-click="cancel = ! cancel">Cancel</span>
+    </div>
+  </li>
 </ul>

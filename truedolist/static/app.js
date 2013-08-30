@@ -281,7 +281,7 @@ function todoItemOptionsCancel() {
 function addItem() {
   if (current_list_id !== null) {
     var title = $("#itemEditInput").val();
-    var parameters = { title: title, request_method: "PUT" };
+    var parameters = { title: title, request_method: "POST" };
     $.post("/api/lists/" + current_list_id + "/items/", parameters,
            function ( result, textStatus ) {
              loadItemsForList(current_list_id,

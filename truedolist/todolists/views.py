@@ -19,7 +19,7 @@ def as_json(results):
 def to_json(items, map_function):
     return as_json(
         [map_function(item) for item in items])
-    
+
 def id_list(items):
     def map_function(item):
         return { 'id': item.pk,
@@ -46,6 +46,21 @@ def labels_to_json(items):
         return { 'id': item.pk,
                  'title': item.title }
     return to_json(items, map_function)
+
+def getPostParam(request, key):
+    """Get request parameter from either form data or JSON payload"""
+    if request.method == 'POST':
+        if request.POST:
+            return request.POST.get(key, False)
+        else:
+            json_data = simplejson.loads(request.body)
+            try:
+                return json_data[key]
+            except KeyError:
+                logging.debug('Could not find key in json data: ' + key)
+                return None
+    logger.debug('No parameters found in POST')
+    return None
 
 @login_required
 def home(request):
@@ -133,29 +148,25 @@ def todo_list(request, todo_list_id):
 
 @logged_in_or_basicauth()
 def todo_items(request, todo_list_id):
-    # If POST, do insert
     if request.method == 'POST':
-        logging.debug("request.method = POST");
-        if request.POST:
-            logging.debug("Post has parameters");
-            title = request.POST.get('title', False)
-            if title:
-                logging.debug("Parameters: title = " + title)
-                todo_list = get_object_or_404(TodoList, pk = todo_list_id,
-                                              user = request.user)
-                next_position = todo_items_next_position(request.user, todo_list)
-                new_todo_item = TodoItem(title=title, todo_list=todo_list,
-                                         user=request.user,
-                                         position=next_position)
-                new_todo_item.save()
-                logging.debug("List saved")
-                return as_json({'id': new_todo_item.pk})
-            else:
-                error = 'Title cannot be empty'
+        title = getPostParam(request, 'title')
+        if title:
+            logging.debug("Parameters: title = " + title)
+            todo_list = get_object_or_404(TodoList, pk = todo_list_id,
+                                          user = request.user)
+            next_position = todo_items_next_position(request.user, todo_list)
+            new_todo_item = TodoItem(title=title, todo_list=todo_list,
+                                     user=request.user,
+                                     position=next_position)
+            new_todo_item.save()
+            logging.debug("List saved")
+            return as_json({'id': new_todo_item.pk})
         else:
-            error = 'No parameters provided'
-        return error_json(error)
-
+            error = 'Title cannot be empty'
+            logging.debug('Error: ' + error)
+            return error_json(error)
+    
+    # GET
     items = TodoItem.objects.filter(user=request.user, 
                                     todo_list=todo_list_id).order_by('position')
     return items_as_json(items)
@@ -170,7 +181,7 @@ def todo_item(request, todo_item_id):
         item.delete()
         return success_json()
     if is_put(request):
-        title = request.POST.get('title', False)
+        title = getPostParam(request, 'title')
         if title:
             item.title = title
             item.save()
