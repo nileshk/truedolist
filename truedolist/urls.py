@@ -12,9 +12,8 @@ urlpatterns = patterns(
     (r'^api/login/$', 'truedolist.todolists.views.login'),    
     (r'^api/lists/$', 'truedolist.todolists.views.todo_lists'),
     (r'^api/lists/(?P<todo_list_id>\d+)/$', 'truedolist.todolists.views.todo_list'),
-    (r'^api/lists/(?P<todo_list_id>\d+)/items/$', 'truedolist.todolists.views.todo_items'),
-    (r'^api/lists/(?P<todo_list_id>\d+)/items$', 'truedolist.todolists.views.todo_items'),
-    (r'^api/items/(?P<todo_item_id>\d+)/$', 'truedolist.todolists.views.todo_item'),
+    (r'^api/lists/(?P<todo_list_id>\d+)/items[/]?$', 'truedolist.todolists.views.todo_items'),
+    (r'^api/items/(?P<todo_item_id>\d+)[/]?$', 'truedolist.todolists.views.todo_item'),
 
     # Labels
     (r'^api/labels/$', 'truedolist.todolists.views.todo_labels'),

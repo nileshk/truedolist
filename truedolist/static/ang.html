@@ -71,7 +71,9 @@
     <div class="span-4">
       <br/>
       <div id="itemEditButtons">
-        <button ng-click="addItem()" type="button">+ New Item</button>
+        <button ng-show="! editItemId" ng-click="addItem()" type="button">+ New Item</button>
+        <button ng-show="editItemId" ng-click="saveItem()" type="button">Save Item</button>
+        <button ng-show="editItemId" ng-click="cancelEdit()" type="button">Cancel</button>
       </div>
     </div>
     <div class="span-12 last">
@@ -102,7 +104,7 @@
         <br/>
         <ul id="lists" class="td-panel-list">
           <li ng-repeat="list in lists" class="td-list">
-            <span ng-click="selectList({{list.id}})">{{list.title}}</span>
+            <span ng-click="selectList(list.id)">{{list.title}}</span>
           </li>
         </ul>
       </div>
@@ -114,7 +116,7 @@
       <li class="td-item" ng-repeat="item in listItems">
         <span ng-click="showOptions = ! showOptions">{{item.title}}</span>
         <div ng-show="showOptions">
-          <span ng-click="editMode = ! editMode">Edit</span>
+          <span ng-click="beginEdit(item.id, item.title)">Edit</span>
           <span ng-click="delete = ! delete">Delete</span>
           <span ng-click="move = ! move">Move</span>
           <span ng-click="label = ! label">Label</span>

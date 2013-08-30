@@ -176,11 +176,12 @@ def todo_item(request, todo_item_id):
     # If POST, do insert
     # If PUT, do update
     # Else GET
+    logging.debug('todo_item')
     item = get_object_or_404(TodoItem, pk = todo_item_id, user = request.user)
     if is_delete(request):
         item.delete()
         return success_json()
-    if is_put(request):
+    if is_post(request): # is_put(request):
         title = getPostParam(request, 'title')
         if title:
             item.title = title
