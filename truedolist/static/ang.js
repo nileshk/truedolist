@@ -16,15 +16,18 @@ angular.module('todoServices', ['ngResource']).
       query: { method: 'GET', isArray: true },
       add: { method:'POST' },
     });
-  }).
+  });
 
-angular.module('trueDoList', ['ngRoute', 'todoServices']).
+  
+angular.module('trueDoList', ['ngRoute', 'todoServices']);
+/*
+.
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.
       when('/lists/:listId', { templateUrl: 'list-detail.html', controller: ListController}).
       otherwise({redirectTo: '/'});
   }]);
-
+*/
 
 function TodoListController($scope, TodoLists, TodoLabels, TodoListItems) {
   $scope.lists = TodoLists.query();
@@ -34,22 +37,17 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems) {
     if ($scope.itemEditInput === "" || $scope.listId === undefined) {
       return false;
     }
-    alert('adding ' + $scope.itemEditInput + ':' + $scope.listId);
     var newItem = new TodoListItems();
     newItem.listId = $scope.listId;
     newItem.title = $scope.itemEditInput;
-    newItem.$add();
-    // TODO reload list
+    newItem.$add(function() {
+      $scope.selectList($scope.listId);
+    });
     // TODO animate new item
   };
 
   $scope.selectList = function(listId) {
     $scope.listId = listId;
+    $scope.listItems = TodoListItems.query({listId: listId});
   };
-}
-
-function ListController($scope, $routeParams, TodoListItems) {
-  var listId = $routeParams.listId;
-  $scope.listId = $routeParams.listId;
-  $scope.items = TodoListItems.query({listId: listId});
 }
