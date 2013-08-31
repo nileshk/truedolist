@@ -120,11 +120,11 @@
         <span ng-click="showOptions = ! showOptions">{{item.title}}</span>
         <div ng-show="showOptions">
           <span ng-click="beginEdit(item.id, item.title)">Edit</span>
-          <span ng-click="delete = ! delete">Delete</span>
-          <span ng-click="move = ! move">Move</span>
-          <span ng-click="label = ! label">Label</span>
-          <span ng-click="unlabel = ! unlabel">Unlabel</span>
-          <span ng-click="cancel = ! cancel">Cancel</span>
+          <span ng-click="">Delete</span>
+          <span ng-click="">Move</span>
+          <span ng-click="cancelAction(item.id, item.title); showOptions = false;">Cancel</span>
+          <span ng-click="">Highlight</span>
+          <span ng-click="">Unhighlight</span>
         </div>
       </li>
     </ul>

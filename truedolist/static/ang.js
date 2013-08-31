@@ -73,7 +73,7 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoLi
     $scope.itemEditInput = title;
   };
 
-  $scope.cancelEdit = function() {
+  $scope.cancelAction = function() {
     $scope.editItemId = null;
     $scope.itemEditInput = '';
   };
