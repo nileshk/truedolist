@@ -58,13 +58,15 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoLi
     itemToSave.itemId = $scope.editItemId;
     itemToSave.title = $scope.itemEditInput;
     itemToSave.$save(function() {
-      $scope.selectList($scope.listId);
+      $scope.selectList($scope.listId, $scope.listTitle);
     });
 
   };
   
-  $scope.selectList = function(listId) {
+  $scope.selectList = function(listId, listTitle) {
+    // TODO: Just take list as parameter
     $scope.listId = listId;
+    $scope.listTitle = listTitle;
     $scope.listItems = TodoListItems.query({listId: listId});
   };
 

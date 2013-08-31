@@ -106,7 +106,7 @@
         <br/>
         <ul id="lists" class="td-panel-list">
           <li ng-repeat="list in lists" class="td-list">
-            <span ng-click="selectList(list.id)" >{{list.title}}</span>
+            <span ng-click="selectList(list.id, list.title)" >{{list.title}}</span>
           </li>
         </ul>
       </div>
@@ -114,6 +114,7 @@
   </div>
 
   <div id="items" class="span-18 last">
+    <h2 class="alt">{{listTitle}}</h2>
     <ul>
       <li class="td-item" ng-repeat="item in listItems">
           <!-- ng-class="{highlightit: $last}" -->
