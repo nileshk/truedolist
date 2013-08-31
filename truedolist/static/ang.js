@@ -24,7 +24,7 @@ angular.module('todoServices', ['ngResource']).
   });
 
   
-angular.module('trueDoList', ['ngRoute', 'todoServices']);
+angular.module('trueDoList', ['ngRoute', 'ngAnimate', 'todoServices']);
 /*
 .
   config(['$routeProvider', function($routeProvider) {
@@ -48,7 +48,6 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoLi
     newItem.$add(function() {
       $scope.selectList($scope.listId);
     });
-    // TODO animate new item
   };
 
   $scope.saveItem = function() {

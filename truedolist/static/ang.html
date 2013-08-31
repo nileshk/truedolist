@@ -49,6 +49,8 @@
             type="text/javascript"></script>
     <script src="/static/js/angular/angular-route.js"
             type="text/javascript"></script>
+    <script src="/static/js/angular/angular-animate.js"
+            type="text/javascript"></script>
   </head>
 
 <body>
@@ -104,7 +106,7 @@
         <br/>
         <ul id="lists" class="td-panel-list">
           <li ng-repeat="list in lists" class="td-list">
-            <span ng-click="selectList(list.id)">{{list.title}}</span>
+            <span ng-click="selectList(list.id)" >{{list.title}}</span>
           </li>
         </ul>
       </div>
@@ -114,6 +116,7 @@
   <div id="items" class="span-18 last">
     <ul>
       <li class="td-item" ng-repeat="item in listItems">
+          <!-- ng-class="{highlightit: $last}" -->
         <span ng-click="showOptions = ! showOptions">{{item.title}}</span>
         <div ng-show="showOptions">
           <span ng-click="beginEdit(item.id, item.title)">Edit</span>

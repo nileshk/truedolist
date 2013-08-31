@@ -50,3 +50,38 @@ button.fg-button { width:auto; overflow:visible; } /* removes extra button width
 .td-label {
     list-style-type: none;
 }
+
+/* AngularJS animations */
+
+.highlightit.ng-enter {
+    -webkit-transition: 1s;
+    transition: 1s;
+    
+    background: gold;
+}
+
+.highlightit.ng-enter-active {
+    background: #fff;
+}
+
+.highlightit.ng-leave {
+    -webkit-transition: 1s;
+    transition: 1s;
+    
+    background: gold;
+}
+
+.highlightit.ng-leave-active {
+    background: #fff;
+}
+
+.highlightit.ng-move {
+    -webkit-transition: 1s;
+    transition: 1s;
+    
+    background: gold;
+}
+
+.highlightit.ng-move-active {
+    background: #fff;
+}
