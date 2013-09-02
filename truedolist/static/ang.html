@@ -118,7 +118,8 @@
     <ul>
       <li class="td-item" ng-repeat="item in listItems">
           <!-- ng-class="{highlightit: $last}" -->
-        <span ng-click="showOptions = ! showOptions">{{item.title}}</span>
+        <div ng-class="{'ui-state-highlight': item.highlight_color}"
+           ng-click="showOptions = ! showOptions">{{item.title}}</div>
         <div ng-show="showOptions">
           <span ng-click="beginEdit(item.id, item.title)">Edit</span>
           <span ng-click="">Delete</span>
