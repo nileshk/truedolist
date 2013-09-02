@@ -17,7 +17,7 @@ angular.module('todoServices', ['ngResource']).
       add: { method:'POST' },
     });
   }).
-  factory('TodoListItem', function($resource) {
+  factory('TodoItem', function($resource) {
     return $resource('/api/items/:itemId/', {itemId:'@itemId'}, {
       save: { method:'POST', params: {request_method: 'PUT' } }
     });
@@ -34,7 +34,7 @@ angular.module('trueDoList', ['ngRoute', 'ngAnimate', 'todoServices']);
   }]);
 */
 
-function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoListItem) {
+function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoItem) {
   $scope.lists = TodoLists.query();
   $scope.labels = TodoLabels.query();
 
@@ -54,7 +54,7 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoLi
     if ($scope.itemEditInput === "" || $scope.editItemId === undefined) {
       return false;
     }
-    var itemToSave = new TodoListItem();
+    var itemToSave = new TodoItem();
     itemToSave.itemId = $scope.editItemId;
     itemToSave.title = $scope.itemEditInput;
     itemToSave.$save(function() {
