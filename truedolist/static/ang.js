@@ -62,6 +62,15 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoIt
     });
 
   };
+
+  $scope.deleteItem = function(itemId) {
+    if (confirm('Delete item?')) {
+      TodoItem.delete({itemId: itemId}, function() {
+        // TODO animate item removal
+        $scope.selectList($scope.listId, $scope.listTitle);
+      });
+    }
+  }
   
   $scope.selectList = function(listId, listTitle) {
     // TODO: Just take list as parameter

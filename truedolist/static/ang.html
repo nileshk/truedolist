@@ -122,7 +122,7 @@
            ng-click="showOptions = ! showOptions">{{item.title}}</div>
         <div ng-show="showOptions">
           <span ng-click="beginEdit(item.id, item.title)">Edit</span>
-          <span ng-click="">Delete</span>
+          <span ng-click="deleteItem(item.id)">Delete</span>
           <span ng-click="">Move</span>
           <span ng-click="cancelAction(item.id, item.title); showOptions = false;">Cancel</span>
           <span ng-click="">Highlight</span>
