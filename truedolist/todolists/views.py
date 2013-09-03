@@ -83,22 +83,18 @@ def todo_lists(request):
     logging.debug("todo_lists")
     # If POST, do insert
     if request.method == 'POST':
-        logging.debug("request.method = POST");
-        if request.POST:
-            logging.debug("Post has parameters");
-            title = request.POST.get('title', False)
-            if title:
-                logging.debug("Parameters: title = " + title)
-                new_todo_list = TodoList(title=title,
-                                         user=request.user,
-                                         position=todo_lists_next_position(request.user))
-                new_todo_list.save()
-                logging.debug("List saved")
-                return as_json({'id': new_todo_list.pk})
-            else:
-                error = 'Title cannot be empty'
+        logging.debug("request.method = POST")
+        title = getPostParam(request, 'title')
+        if title:
+            logging.debug("Parameters: title = " + title)
+            new_todo_list = TodoList(title=title,
+                                     user=request.user,
+                                     position=todo_lists_next_position(request.user))
+            new_todo_list.save()
+            logging.debug("List saved")
+            return as_json({'id': new_todo_list.pk})
         else:
-            error = 'No parameters provided'
+            error = 'Title cannot be empty'
         return error_json(error)
 
     lists = TodoList.objects.filter(user=request.user).order_by('position')
@@ -129,7 +125,7 @@ def todo_list(request, todo_list_id):
         item.delete()
         return success_json()
     if is_put(request):
-        title = request.POST.get('title', False)
+        title = getPostParam(request, 'title')
         if title:
             item.title = title
             item.save()
@@ -202,18 +198,17 @@ def todo_item(request, todo_item_id):
 @logged_in_or_basicauth()
 def reposition_todo_item(request, todo_item_id):
     if request.method == 'POST':
-        if request.POST:
-            before_id = request.POST.get('before_id', False)
-            if before_id:
-                todo_item = get_object_or_404(TodoItem, pk = todo_item_id,
-                                              user = request.user)
-                todo_item_before = get_object_or_404(TodoItem, pk = before_id,
-                                                     user = request.user)
-                if todo_item.todo_list != todo_item_before.todo_list:
-                    return as_json(
-                        {'error': 'Cannot reposition items to other lists'});
-                reposition_todo_item_db(todo_item, before_id, request.user)
-                return success_json()
+        before_id = getPostParam(request, 'before_id')
+        if before_id:
+            todo_item = get_object_or_404(TodoItem, pk = todo_item_id,
+                                          user = request.user)
+            todo_item_before = get_object_or_404(TodoItem, pk = before_id,
+                                                 user = request.user)
+            if todo_item.todo_list != todo_item_before.todo_list:
+                return as_json(
+                    {'error': 'Cannot reposition items to other lists'})
+            reposition_todo_item_db(todo_item, before_id, request.user)
+            return success_json()
     return error_json()
 
 @transaction.commit_on_success
@@ -243,13 +238,12 @@ def reposition_todo_item_db(todo_item, before_id, user):
 @logged_in_or_basicauth()
 def reposition_todo_list(request, todo_list_id):
     if request.method == 'POST':
-        if request.POST:
-            before_id = request.POST.get('before_id', False)
-            if before_id:
-                todo_list = get_object_or_404(TodoList, pk = todo_list_id,
-                                              user = request.user)
-                reposition_todo_list_db(todo_list, before_id, request.user)
-                return success_json()
+        before_id = getPostParam(request, 'before_id')
+        if before_id:
+            todo_list = get_object_or_404(TodoList, pk = todo_list_id,
+                                          user = request.user)
+            reposition_todo_list_db(todo_list, before_id, request.user)
+            return success_json()
     return error_json()
 
 @transaction.commit_on_success
@@ -279,10 +273,10 @@ def reposition_todo_list_db(todo_list, before_id, user):
 @logged_in_or_basicauth()
 def move_todo_item(request, todo_item_id):
     logging.debug("move_todo_item")
-    if request.method != "POST" or not request.POST:
+    if request.method != "POST":
         raise Http404 # TODO This is probably the wrong error code
     todo_item = get_object_or_404(TodoItem, pk = todo_item_id, user = request.user)
-    destination_list_id = request.POST.get('destination_list_id', False)
+    destination_list_id = getPostParam(request, 'destination_list_id')
     if destination_list_id:
         logging.debug("destination_list_id:" + str(destination_list_id))
         destination_list = get_object_or_404(TodoList, pk = destination_list_id,
@@ -299,10 +293,10 @@ def move_todo_item(request, todo_item_id):
 @logged_in_or_basicauth()
 def highlight_todo_item(request, todo_item_id):
     logging.debug("highlight_todo_item")
-    if request.method != "POST" or not request.POST:
+    if request.method != "POST":
         raise Http404 # TODO This is probably the wrong error code
     item = get_object_or_404(TodoItem, pk = todo_item_id, user = request.user)
-    highlight_color = request.POST.get('highlight_color', False)
+    highlight_color = getPostParam(request, 'highlight_color')
     if highlight_color:
         logging.debug('Setting highlight_color for todo_item_id: ' + todo_item_id +
                      ' to ' + highlight_color)
@@ -320,22 +314,19 @@ def todo_labels(request):
     """ GET: List labels, POST: Create a new label """
     logging.debug("todo_labels")
     if request.method == 'POST':
-        logging.debug("request.method = POST");
-        if request.POST:
-            logging.debug("Post has parameters");
-            title = request.POST.get('title', False)
-            if title:
-                logging.debug("Parameters: title = " + title)
-                new_todo_label = TodoLabel(
-                    title=title,
-                    user=request.user)
-                new_todo_label.save()
-                logging.debug("Label saved")
-                return as_json({'id': new_todo_label.pk})
-            else:
-                error = 'Title cannot be empty'
+        logging.debug("request.method = POST")
+        logging.debug("Post has parameters")
+        title = getPostParam(request, 'title')
+        if title:
+            logging.debug("Parameters: title = " + title)
+            new_todo_label = TodoLabel(
+                title=title,
+                user=request.user)
+            new_todo_label.save()
+            logging.debug("Label saved")
+            return as_json({'id': new_todo_label.pk})
         else:
-            error = 'No parameters provided'
+            error = 'Title cannot be empty'
         return error_json(error)
 
     labels = TodoLabel.objects.filter(user=request.user).order_by('title')
@@ -349,7 +340,7 @@ def todo_label(request, label_id):
         label.delete()
         return success_json()
     if is_put(request):
-        title = request.POST.get('title', False)
+        title = getPostParam(request, 'title')
         if title:
             label.title = title
             label.save()
@@ -403,8 +394,7 @@ def is_request_of_type(request, request_type):
         return True
     else:
         if request.method == 'POST':
-            request_method = request.POST.get('request_method', False)
+            request_method = getPostParam(request, 'request_method')
             if request_method == request_type:
                 return True
     return False
-    

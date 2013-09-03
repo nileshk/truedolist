@@ -14,12 +14,24 @@ angular.module('todoServices', ['ngResource']).
   factory('TodoListItems', function($resource) {
     return $resource('/api/lists/:listId/items/', {listId:'@listId'}, {
       query: { method: 'GET', isArray: true },
-      add: { method:'POST' },
+      add: { method:'POST' }
     });
   }).
   factory('TodoItem', function($resource) {
     return $resource('/api/items/:itemId/', {itemId:'@itemId'}, {
       save: { method:'POST', params: {request_method: 'PUT' } }
+    });
+  }).
+  // For repositioning an item within the same list
+  factory('TodoItemReposition', function($resource) {
+    return $resource('/api/items/reposition/:itemId/', {itemId:'@itemId'}, {
+      reposition: { method:'POST' }
+    });
+  }).
+  // For moving an item to a different list
+  factory('TodoItemMove', function($resource) {
+    return $resource('/api/items/move/:itemId/', {itemId:'@itemId'}, {
+      move: { method:'POST' }
     });
   });
 
@@ -34,7 +46,8 @@ angular.module('trueDoList', ['ngRoute', 'ngAnimate', 'todoServices']);
   }]);
 */
 
-function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoItem) {
+function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, 
+                            TodoItem, TodoItemReposition, TodoItemMove) {
   $scope.lists = TodoLists.query();
   $scope.labels = TodoLabels.query();
 
@@ -46,7 +59,7 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoIt
     newItem.listId = $scope.listId;
     newItem.title = $scope.itemEditInput;
     newItem.$add(function() {
-      $scope.selectList($scope.listId);
+      $scope.selectList($scope.listId, $scope.listTitle);
     });
   };
 
@@ -79,6 +92,26 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoIt
     $scope.listItems = TodoListItems.query({listId: listId});
   };
 
+  $scope.itemClick = function(item) {
+    if ($scope.moveItemId) {
+      TodoItemReposition.reposition(
+        { itemId: $scope.moveItemId, before_id: item.id },
+        function() {
+          $scope.cancelAction();
+          $scope.selectList($scope.listId, $scope.listTitle);
+        });
+    }
+  }
+
+  $scope.startMove = function(item) {
+    $scope.moveItemId = item.id;
+
+    $scope.statusMessageAreaClass = 'notice';
+    $scope.statusMessageAreaHeading = 'Moving Todo Item:';
+    $scope.statusMessageAreaMessage = 'Click on list to move to ' +
+      'or place in list of todo items to move to';
+  }
+  
   $scope.beginEdit = function(itemId, title) {
     $scope.editItemId = itemId;
     $scope.itemEditInput = title;
@@ -87,5 +120,10 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, TodoIt
   $scope.cancelAction = function() {
     $scope.editItemId = null;
     $scope.itemEditInput = '';
+    $scope.moveItemId = null;
+
+    $scope.statusMessageAreaClass = null;
+    $scope.statusMessageAreaHeading = null;
+    $scope.statusMessageAreaMessage = null;
   };
 }

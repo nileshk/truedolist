@@ -79,7 +79,9 @@
       </div>
     </div>
     <div class="span-12 last">
-      <div id="statusMessageArea"></div>
+      <div id="statusMessageArea" class="{{statusMessageAreaClass}}">
+        <span class="loud">{{statusMessageAreaHeading}}</span>
+        {{statusMessageAreaMessage}}</div>
     </div>
   </form>
   <div class="span-24 last">
@@ -119,11 +121,11 @@
       <li class="td-item" ng-repeat="item in listItems">
           <!-- ng-class="{highlightit: $last}" -->
         <div ng-class="{'ui-state-highlight': item.highlight_color}"
-           ng-click="showOptions = ! showOptions">{{item.title}}</div>
+           ng-click="showOptions = ! showOptions; itemClick(item)">{{item.title}}</div>
         <div ng-show="showOptions">
           <span ng-click="beginEdit(item.id, item.title)">Edit</span>
           <span ng-click="deleteItem(item.id)">Delete</span>
-          <span ng-click="">Move</span>
+          <span ng-click="startMove(item)">Move</span>
           <span ng-click="cancelAction(item.id, item.title); showOptions = false;">Cancel</span>
           <span ng-click="">Highlight</span>
           <span ng-click="">Unhighlight</span>
