@@ -2,8 +2,9 @@
 
 angular.module('todoServices', ['ngResource']).
   factory('TodoLists', function($resource) {
-    return $resource('/api/lists/:listId/', {listId:'@listId'}, {
-      query: { method: 'GET', isArray: true }
+    return $resource('/api/lists/:action/:listId/', {listId:'@listId'}, {
+      query: { method: 'GET', isArray: true },
+      reposition: { method:'POST', params: { action: 'reposition' } }
     });
   }).
   factory('TodoLabels', function($resource) {
@@ -18,29 +19,12 @@ angular.module('todoServices', ['ngResource']).
     });
   }).
   factory('TodoItem', function($resource) {
-    return $resource('/api/items/:itemId/', {itemId:'@itemId'}, {
-      save: { method:'POST', params: {request_method: 'PUT' } }
-    });
-  }).
-  // For repositioning a list
-  factory('TodoListReposition', function($resource) {
-    return $resource('/api/lists/reposition/:listId/', {listId:'@listId'}, {
-      reposition: { method:'POST' }
-    });
-  }).
-  // For repositioning an item within the same list
-  factory('TodoItemReposition', function($resource) {
-    return $resource('/api/items/reposition/:itemId/', {itemId:'@itemId'}, {
-      reposition: { method:'POST' }
-    });
-  }).
-  // For moving an item to a different list
-  factory('TodoItemMove', function($resource) {
-    return $resource('/api/items/move/:itemId/', {itemId:'@itemId'}, {
-      move: { method:'POST' }
+    return $resource('/api/items/:action/:itemId/', {itemId:'@itemId'}, {
+      save: { method:'POST', params: { request_method: 'PUT' } },
+      move: { method:'POST', params: { action: 'move' } },
+      reposition: { method:'POST', params: { action: 'reposition' } }
     });
   });
-
   
 angular.module('trueDoList', ['ngRoute', 'ngAnimate', 'todoServices']);
 /*
@@ -53,8 +37,7 @@ angular.module('trueDoList', ['ngRoute', 'ngAnimate', 'todoServices']);
 */
 
 function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, 
-                            TodoItem, TodoItemReposition, TodoItemMove,
-                            TodoListReposition) {
+                            TodoItem) {
   $scope.lists = TodoLists.query();
   $scope.labels = TodoLabels.query();
 
@@ -142,14 +125,14 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
 
   $scope.listClick = function(listId, listTitle) {
     if ($scope.moveListId) {
-      TodoListReposition.reposition(
+      TodoLists.reposition(
         { listId: $scope.moveListId, before_id: listId },
         function() {
           $scope.cancelAction();
           $scope.refreshLists();
         });
     } else if ($scope.moveItemId) {
-      TodoItemMove.move(
+      TodoItem.move(
         { itemId: $scope.moveItemId, destination_list_id: listId },
         function() {
           $scope.cancelAction();
@@ -162,7 +145,7 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
   
   $scope.itemClick = function(item) {
     if ($scope.moveItemId) {
-      TodoItemReposition.reposition(
+      TodoItem.reposition(
         { itemId: $scope.moveItemId, before_id: item.id },
         function() {
           $scope.cancelAction();

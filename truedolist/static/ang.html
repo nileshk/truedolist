@@ -123,7 +123,7 @@
       <span ng-click="startMoveList(listId)">Move</span>
       <span ng-click="">Label</span>
       <span ng-click="">Unlabel</span>
-      <span ng-click="cancelAction();">Cancel</span>
+      <span ng-click="cancelAction(); showListOptions = false">Cancel</span>
     </div>
     <ul>
       <li class="td-item" ng-repeat="item in listItems">
@@ -134,7 +134,7 @@
           <span ng-click="beginEdit(item.id, item.title)">Edit</span>
           <span ng-click="deleteItem(item.id)">Delete</span>
           <span ng-click="startMove(item)">Move</span>
-          <span ng-click="cancelAction()">Cancel</span>
+          <span ng-click="cancelAction(); showOptions = false">Cancel</span>
           <span ng-click="">Highlight</span>
           <span ng-click="">Unhighlight</span>
         </div>
