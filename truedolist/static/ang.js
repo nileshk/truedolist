@@ -51,6 +51,10 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
   $scope.lists = TodoLists.query();
   $scope.labels = TodoLabels.query();
 
+  $scope.refreshLists = function() {
+    $scope.lists = TodoLists.query();
+  }
+  
   $scope.editSubmit = function() {
     if ($scope.editItemId) {
       $scope.saveItem();
@@ -85,6 +89,18 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
 
   };
 
+  $scope.createList = function() {
+    var title = prompt("Enter title of new list", "");
+    if (title !== null) {
+      var listToSave = new TodoLists();
+      listToSave.title = title;
+      listToSave.$save(function(savedList) {
+        $scope.selectList(savedList.id, title);
+        $scope.refreshLists();
+      });
+    }
+  }
+
   $scope.deleteItem = function(itemId) {
     if (confirm('Delete item?')) {
       TodoItem.delete({itemId: itemId}, function() {
@@ -102,6 +118,7 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
         $scope.listTitle = null;
         $scope.listItems = null;
         $scope.cancelAction();
+        $scope.refreshLists();
       });
     }
   }
