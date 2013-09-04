@@ -22,6 +22,12 @@ angular.module('todoServices', ['ngResource']).
       save: { method:'POST', params: {request_method: 'PUT' } }
     });
   }).
+  // For repositioning a list
+  factory('TodoListReposition', function($resource) {
+    return $resource('/api/lists/reposition/:listId/', {listId:'@listId'}, {
+      reposition: { method:'POST' }
+    });
+  }).
   // For repositioning an item within the same list
   factory('TodoItemReposition', function($resource) {
     return $resource('/api/items/reposition/:itemId/', {itemId:'@itemId'}, {
@@ -47,7 +53,8 @@ angular.module('trueDoList', ['ngRoute', 'ngAnimate', 'todoServices']);
 */
 
 function TodoListController($scope, TodoLists, TodoLabels, TodoListItems, 
-                            TodoItem, TodoItemReposition, TodoItemMove) {
+                            TodoItem, TodoItemReposition, TodoItemMove,
+                            TodoListReposition) {
   $scope.lists = TodoLists.query();
   $scope.labels = TodoLabels.query();
 
@@ -72,9 +79,9 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
     newItem.title = $scope.itemEditInput;
     newItem.$add(function() {
       $scope.itemEditInput = '';
-      $scope.selectList($scope.listId, $scope.listTitle);
+      $scope.refreshCurrentList();
     });
-  };
+  }
 
   $scope.saveItem = function() {
     if ($scope.itemEditInput === "" || $scope.editItemId === undefined) {
@@ -84,10 +91,9 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
     itemToSave.itemId = $scope.editItemId;
     itemToSave.title = $scope.itemEditInput;
     itemToSave.$save(function() {
-      $scope.selectList($scope.listId, $scope.listTitle);
+      $scope.refreshCurrentList();
     });
-
-  };
+  }
 
   $scope.createList = function() {
     var title = prompt("Enter title of new list", "");
@@ -105,7 +111,7 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
     if (confirm('Delete item?')) {
       TodoItem.delete({itemId: itemId}, function() {
         // TODO animate item removal
-        $scope.selectList($scope.listId, $scope.listTitle);
+        $scope.refreshCurrentList();
       });
     }
   }
@@ -122,21 +128,45 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
       });
     }
   }
+
+  $scope.refreshCurrentList = function() {
+    $scope.selectList($scope.listId, $scope.listTitle);
+  }
   
   $scope.selectList = function(listId, listTitle) {
     // TODO: Just take list as parameter
     $scope.listId = listId;
     $scope.listTitle = listTitle;
     $scope.listItems = TodoListItems.query({listId: listId});
-  };
+  }
 
+  $scope.listClick = function(listId, listTitle) {
+    if ($scope.moveListId) {
+      TodoListReposition.reposition(
+        { listId: $scope.moveListId, before_id: listId },
+        function() {
+          $scope.cancelAction();
+          $scope.refreshLists();
+        });
+    } else if ($scope.moveItemId) {
+      TodoItemMove.move(
+        { itemId: $scope.moveItemId, destination_list_id: listId },
+        function() {
+          $scope.cancelAction();
+          $scope.refreshCurrentList();
+        });
+    } else {
+      $scope.selectList(listId, listTitle);
+    }
+  }
+  
   $scope.itemClick = function(item) {
     if ($scope.moveItemId) {
       TodoItemReposition.reposition(
         { itemId: $scope.moveItemId, before_id: item.id },
         function() {
           $scope.cancelAction();
-          $scope.selectList($scope.listId, $scope.listTitle);
+          $scope.refreshCurrentList();
         });
     }
   }
@@ -161,7 +191,7 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
   $scope.beginEdit = function(itemId, title) {
     $scope.editItemId = itemId;
     $scope.itemEditInput = title;
-  };
+  }
 
   $scope.beginEditList = function(listId, listTitle) {
     $scope.editListId = listId;
@@ -172,6 +202,7 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
     $scope.editItemId = null;
     $scope.itemEditInput = '';
     $scope.moveItemId = null;
+    $scope.moveListId = null;
     $scope.editListId = null;
     $scope.itemEditInput = null;
 
@@ -181,5 +212,5 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
 
     $scope.showOptions = false;
     $scope.showListOptions = false;
-  };
+  }
 }
