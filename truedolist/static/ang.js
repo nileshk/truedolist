@@ -2,7 +2,7 @@
 
 angular.module('todoServices', ['ngResource']).
   factory('TodoLists', function($resource) {
-    return $resource('/api/lists', {}, {
+    return $resource('/api/lists/:listId/', {listId:'@listId'}, {
       query: { method: 'GET', isArray: true }
     });
   }).
@@ -93,6 +93,18 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
       });
     }
   }
+
+  $scope.deleteList = function(listId) {
+    if (confirm('Delete list?')) {
+      TodoLists.delete({listId: listId}, function() {
+        // TODO animate list removal
+        $scope.listId = null;
+        $scope.listTitle = null;
+        $scope.listItems = null;
+        $scope.cancelAction();
+      });
+    }
+  }
   
   $scope.selectList = function(listId, listTitle) {
     // TODO: Just take list as parameter
@@ -120,19 +132,37 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
     $scope.statusMessageAreaMessage = 'Click on list to move to ' +
       'or place in list of todo items to move to';
   }
+
+  $scope.startMoveList = function(listId) {
+    $scope.moveListId = listId;
+
+    $scope.statusMessageAreaClass = 'notice';
+    $scope.statusMessageAreaHeading = 'Moving Todo List:';
+    $scope.statusMessageAreaMessage = 'Click on place in list of todo lists to move to';
+  }
   
   $scope.beginEdit = function(itemId, title) {
     $scope.editItemId = itemId;
     $scope.itemEditInput = title;
   };
 
+  $scope.beginEditList = function(listId, listTitle) {
+    $scope.editListId = listId;
+    $scope.itemEditInput = listTitle;
+  }
+  
   $scope.cancelAction = function() {
     $scope.editItemId = null;
     $scope.itemEditInput = '';
     $scope.moveItemId = null;
+    $scope.editListId = null;
+    $scope.itemEditInput = null;
 
     $scope.statusMessageAreaClass = null;
     $scope.statusMessageAreaHeading = null;
     $scope.statusMessageAreaMessage = null;
+
+    $scope.showOptions = false;
+    $scope.showListOptions = false;
   };
 }

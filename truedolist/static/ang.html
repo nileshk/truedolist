@@ -116,7 +116,15 @@
   </div>
 
   <div id="items" class="span-18 last">
-    <h2 class="alt">{{listTitle}}</h2>
+    <h2 class="alt" ng-click="showListOptions = ! showListOptions">{{listTitle}}</h2>
+    <div ng-show="showListOptions">
+      <span ng-click="beginEditList(listId, listTitle)">Edit</span>
+      <span ng-click="deleteList(listId)">Delete</span>
+      <span ng-click="startMoveList(listId)">Move</span>
+      <span ng-click="">Label</span>
+      <span ng-click="">Unlabel</span>
+      <span ng-click="cancelAction();">Cancel</span>
+    </div>
     <ul>
       <li class="td-item" ng-repeat="item in listItems">
           <!-- ng-class="{highlightit: $last}" -->
@@ -126,7 +134,7 @@
           <span ng-click="beginEdit(item.id, item.title)">Edit</span>
           <span ng-click="deleteItem(item.id)">Delete</span>
           <span ng-click="startMove(item)">Move</span>
-          <span ng-click="cancelAction(item.id, item.title); showOptions = false;">Cancel</span>
+          <span ng-click="cancelAction()">Cancel</span>
           <span ng-click="">Highlight</span>
           <span ng-click="">Unhighlight</span>
         </div>
