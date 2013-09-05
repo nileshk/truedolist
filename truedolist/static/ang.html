@@ -135,8 +135,8 @@
           <span ng-click="deleteItem(item.id)">Delete</span>
           <span ng-click="startMove(item)">Move</span>
           <span ng-click="cancelAction(); showOptions = false">Cancel</span>
-          <span ng-click="">Highlight</span>
-          <span ng-click="">Unhighlight</span>
+          <span ng-click="highlightItem(item.id, 1)">Highlight</span>
+          <span ng-click="highlightItem(item.id, null)">Unhighlight</span>
         </div>
       </li>
     </ul>

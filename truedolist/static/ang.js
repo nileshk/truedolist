@@ -22,7 +22,8 @@ angular.module('todoServices', ['ngResource']).
     return $resource('/api/items/:action/:itemId/', {itemId:'@itemId'}, {
       save: { method:'POST', params: { request_method: 'PUT' } },
       move: { method:'POST', params: { action: 'move' } },
-      reposition: { method:'POST', params: { action: 'reposition' } }
+      reposition: { method:'POST', params: { action: 'reposition' } },
+      highlight: { method:'POST', params: { action: 'highlight' } }
     });
   });
   
@@ -112,6 +113,17 @@ function TodoListController($scope, TodoLists, TodoLabels, TodoListItems,
     }
   }
 
+  $scope.highlightItem = function(itemId, highlightColor) {
+    var parameters = { p:'p' } // TODO Need at least one param or get 404
+    parameters.itemId = itemId;
+    parameters.highlight_color = highlightColor;
+
+    TodoItem.highlight(parameters, function() {
+      // TODO animation
+      $scope.refreshCurrentList();
+    });
+  }
+  
   $scope.refreshCurrentList = function() {
     $scope.selectList($scope.listId, $scope.listTitle);
   }

@@ -34,7 +34,7 @@ urlpatterns = patterns(
      'truedolist.todolists.views.move_todo_item'),
 
     # Highlight functions
-    (r'^api/items/highlight/(?P<todo_item_id>\d+)/$', 
+    (r'^api/items/highlight/(?P<todo_item_id>\d+)[/]?$', 
      'truedolist.todolists.views.highlight_todo_item'),
     
     # Example:

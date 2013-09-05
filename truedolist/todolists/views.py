@@ -299,7 +299,7 @@ def highlight_todo_item(request, todo_item_id):
     highlight_color = getPostParam(request, 'highlight_color')
     if highlight_color:
         logging.debug('Setting highlight_color for todo_item_id: ' + todo_item_id +
-                     ' to ' + highlight_color)
+                     ' to ' + str(highlight_color))
         item.highlight_color = int(highlight_color)
     else:
         logging.debug('Unhighlighting todo_item_id: ' + todo_item_id)
